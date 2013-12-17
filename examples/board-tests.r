@@ -75,11 +75,14 @@ btnlib: slim/open 'style-button none
 gl/layout compose/deep [
 	vcavity [
 		title "Click and drag buttons, drop on zone."
-		row  [
-			column (white) (gray) [
-				btn-cmd: button "Button" stiff
-				fld-cmd: button "Field"  stiff
-				grp-cmd: button "Group"  stiff
+		row  tight [
+			main-column: column (white) (gray) stiff [
+					btn-cmd: button "Button" 
+					fld-cmd: button "Field"  
+					grp-cmd: button "Group" 
+			]
+			column 0x20 [
+				main-drag-bar: elastic ".." stiff-x  12x-1 ;(black) (white * .9) corner 2 with [fill aspects/border-color white]
 			]
 			frm: pane  400x400 [
 				drop-zone: column tight activate [
@@ -91,15 +94,33 @@ gl/layout compose/deep [
 	]
 ]
 
+
+main-drag-bar/actions: context [
+	select: funcl [event][
+		event/marble/user-data: content main-column/aspects/dimension-adjust
+	]
+	drop?: drop: drop-bg: swipe: release: funcl [event][
+		if in event 'drag-delta [
+			fill main-column/aspects/dimension-adjust (event/marble/user-data + event/drag-delta * 1x0)
+		]
+	]
+]
+
+
+
+
+
+
 current-cv: none
 
 btn-cmd/actions: context [
 	layout-spec: [ 
-		marble: button "Click" 100x23 
+		marble: button "Click"  
 		mcv: cv
 	]
 	
 	post-layout-code: [
+		fill marble/aspects/size 100x23
 	]
 
 	;------
@@ -184,6 +205,7 @@ drop-zone/actions: context [
 		print "dragging"
 	]
 ]
+
 
 von
 do-events
