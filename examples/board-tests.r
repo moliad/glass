@@ -66,6 +66,7 @@ win: slim/open 'window none
 slim/open/expose 'epoxy none  [ !pair-add ]
 cv: slim/open 'style-cv none  [!cv]
 btnlib: slim/open 'style-button none  
+evtlib: slim/open/expose 'event none [offset-to-coordinates]
 
 ;cv/von
 ;win/von
@@ -114,6 +115,8 @@ main-drag-bar/actions: context [
 current-cv: none
 
 btn-cmd/actions: context [
+	mcv: none
+	
 	layout-spec: [ 
 		marble: button "Click"  
 		mcv: cv
@@ -142,7 +145,8 @@ btn-cmd/actions: context [
 			tot: !pair-add [ cv.offset cv.drag-delta ]
 			offset < tot
 		]
-		fill pool/cv.offset event/offset - frm-off + content event/marble/material/position
+		
+		fill pool/cv.offset event/offset - frm-off + (offset-to-coordinates event/marble 0x0)
 	]
 	
 	;------
